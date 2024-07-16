@@ -7,6 +7,7 @@
   "dependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@openzeppelin/contracts": "^4.9.6",
+    "dotenv": "^16.4.5",
     "hardhat-tracer": "^1.2.1",
     "i": "^0.3.7",
     "npm": "^9.4.2"

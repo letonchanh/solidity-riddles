@@ -1,6 +1,7 @@
 const { loadFixture, mine } = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+require("dotenv").config();
 
 const NAME = "Alpha Goat Club";
 
@@ -30,9 +31,10 @@ describe(NAME, function () {
              */
             console.log("signer:", await AlphaGoatClub.owner());
 
+            /** Get a signature from a transaction signed by signer on Ethereum mainnet */
             // const infuraProvider = ethers.getDefaultProvider(
             //     'mainnet',
-            //     { infura: 'f64a1f26acf7432287e2283e33714ca3' }
+            //     { infura: `${process.env.INFURA_API_KEY}` }
             // );
             // const txHash = '0x925b5905c877b2bea1453996a4e5980f9bfbba1abbd07b469a79d8ccf97931d3';
             // const tx = await infuraProvider.getTransaction(txHash);
@@ -84,6 +86,7 @@ describe(NAME, function () {
             const signature = ethers.utils.joinSignature({ v, r, s });
             const recoveredAddress = ethers.utils.recoverAddress(msgHash, signature);
             console.log("recoveredAddress", recoveredAddress);
+            expect(recoveredAddress).to.be.equal(await AlphaGoatClub.owner());
 
             await AlphaGoatClub
                 .connect(attacker)

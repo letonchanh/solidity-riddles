@@ -81,10 +81,20 @@ describe(NAME, function () {
       .connect(borrower)
       .approve(LendingContract.address, ethers.constants.MaxUint256);
 
+    console.log("oracle ETH:", ethers.utils.formatEther(await ethers.provider.getBalance(AMMContract.address)));
+    console.log("oracle ethReserve:", ethers.utils.formatEther(await AMMContract.ethReserve()));
+    console.log("oracle Token:", ethers.utils.formatEther(await collateralTokenContract.balanceOf(AMMContract.address)));
+    console.log("oracle lendTokenReserve:", ethers.utils.formatEther(await AMMContract.lendTokenReserve()));
+
     // borrower takes loan and pays 240 tokens as collateral
     await LendingContract.connect(borrower).borrowEth(
       ethers.utils.parseEther("6")
     );
+    console.log("borrower ETH:", ethers.utils.formatEther(await ethers.provider.getBalance(borrower.address)));
+    console.log("borrower Token:", ethers.utils.formatEther(await collateralTokenContract.balanceOf(borrower.address)));
+
+    console.log("lending ETH:", ethers.utils.formatEther(await ethers.provider.getBalance(LendingContract.address)));
+    console.log("lending Token:", ethers.utils.formatEther(await collateralTokenContract.balanceOf(LendingContract.address)));
 
     return {
       FlashLoanContract,
@@ -117,7 +127,11 @@ describe(NAME, function () {
 
     // prettier-ignore
     it("conduct your attack here", async function () {
-      
+      const attackerFactory = await ethers.getContractFactory("FlashLoanAttacker", lender);
+      const attacker = await attackerFactory.deploy(
+        LendingContract.address, FlashLoanContract.address, borrower.address
+      );
+      await attacker.attack();
     });
 
     after(async function () {
@@ -129,6 +143,8 @@ describe(NAME, function () {
       const difference = (
         await collateralTokenContract.balanceOf(lender.address)
       ).sub(ethers.utils.parseEther("240")); // 240e18
+
+      console.log("difference:", difference);
 
       const pass = difference.gte(ethers.BigNumber.from(-30));
 

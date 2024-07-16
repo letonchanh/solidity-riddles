@@ -36,7 +36,11 @@ describe(NAME, function () {
       );
     });
 
-    it("conduct your attack here", async function () {});
+    it("conduct your attack here", async function () {
+      const attackerFactory = await ethers.getContractFactory("ForwarderAttacker", attackerWallet);
+      const attacker = await attackerFactory.deploy(forwarderContract.address, walletContract.address);
+      await attacker.attack();
+    });
 
     after(async function () {
       const attackerWalletBalanceAfter = await ethers.provider.getBalance(

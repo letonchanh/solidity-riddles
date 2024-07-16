@@ -51,6 +51,11 @@ describe(NAME, function () {
             NameServiceAttackerBalanceOfBefore = ethers.utils.parseUnits(
                 ethers.utils.formatEther(await network.provider.send("eth_getBalance", [NameServiceAttacker.address]))
             );
+            console.log("bankBalanceOfBefore:", ethers.utils.formatEther(bankBalanceOfBefore));
+            console.log("NameServiceAttackerBalanceOfBefore:", NameServiceAttackerBalanceOfBefore);
+
+            await NameServiceAttacker
+                .attack({ value: ethers.utils.parseEther("5") });
         });
 
         it("conduct your attack here", async function () {
